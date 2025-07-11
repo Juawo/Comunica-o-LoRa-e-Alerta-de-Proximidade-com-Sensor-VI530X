@@ -35,7 +35,17 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(read-proximity read-proximity.c )
+add_executable(read-proximity 
+    read-proximity.c 
+    vl53l0x/vl53l0x_api.c
+    vl53l0x/vl53l0x_api_core.c
+    vl53l0x/vl53l0x_api_calibration.c
+    vl53l0x/vl53l0x_api_ranging.c
+    vl53l0x/vl53l0x_api_strings.c
+    vl53l0x/vl53l0x_i2c_platform.c
+    src/buzzer.c
+    src/vl53l0_sensor.c
+    )
 
 pico_set_program_name(read-proximity "read-proximity")
 pico_set_program_version(read-proximity "0.1")
@@ -46,17 +56,21 @@ pico_enable_stdio_usb(read-proximity 1)
 
 # Add the standard library to the build
 target_link_libraries(read-proximity
-        pico_stdlib)
+        pico_stdlib
+        hardware_pwm
+        )
 
 # Add the standard include files to the build
 target_include_directories(read-proximity PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/vl53l0x
+        ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
 # Add any user requested libraries
 target_link_libraries(read-proximity 
         hardware_i2c
-        
+        hardware_pwm
         )
 
 pico_add_extra_outputs(read-proximity)
